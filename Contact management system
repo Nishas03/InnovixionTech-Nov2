@@ -1,0 +1,117 @@
+Front-End (React)
+Initialize Your React App:
+Install Axios for API Requests:
+sql
+npx create-react-app contact-management-system-client
+cd contact-management-system-client
+Install Axios for API Requests:
+npm install axios
+Create ContactList.js:
+jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const ContactList = () => {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/contacts')
+      .then(response => setContacts(response.data))
+      .catch(error => console.error('Error fetching contacts:', error));
+  }, []);
+
+  const handleDelete = async (id) => {
+    await axios.delete(`/api/contacts/${id}`);
+    setContacts(contacts.filter(contact => contact._id !== id));
+  };
+
+  return (
+    <div>
+      <h2>Contact List</h2>
+      <ul>
+        {contacts.map(contact => (
+          <li key={contact._id}>
+            {contact.name} - {contact.email} - {contact.phone}
+            <button onClick={() => handleDelete(contact._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default ContactList;
+Create App.js:
+
+jsx
+import React from 'react';
+import ContactList from './ContactList';
+
+function App() {
+  return (
+    <div>
+      <ContactList />
+    </div>
+  );
+}
+
+export default App;
+Run Your App:
+
+sql
+npm start
+Back-End (Node.js with Express)
+Initialize Your Project:
+
+perl
+mkdir contact-management-system
+cd contact-management-system
+npm init -y
+Install Dependencies:
+
+css
+npm install express mongoose body-parser
+Create server.js:
+
+javascript
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// MongoDB Connection
+mongoose.connect('mongodb://localhost/contact-management', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Middleware
+app.use(bodyParser.json());
+
+// Define Contact Schema
+const contactSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  phone: String,
+});
+
+const Contact = mongoose.model('Contact', contactSchema);
+// API Routes
+app.get('/api/contacts', async (req, res) => {
+  const contacts = await Contact.find();
+  res.json(contacts);
+});
+
+app.post('/api/contacts', async (req, res) => {
+  const newContact = new Contact(req.body);
+  await newContact.save();
+  res.json(newContact);
+});
+
+app.delete('/api/contacts/:id', async (req, res) => {
+  await Contact.findByIdAndDelete(req.params.id);
+  res.json({ message: 'Contact deleted successfully' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
