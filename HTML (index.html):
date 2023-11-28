@@ -1,0 +1,139 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Simple Quiz App</title>
+</head>
+<body>
+    <div class="container">
+        <div id="quiz-container">
+            <h2>Quiz App</h2>
+            <form id="quiz-form">
+                <div class="question">
+                    <p>1. What is the capital of France?</p>
+                    <label>
+                        <input type="radio" name="q1" value="a"> a) Paris
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="b"> b) Berlin
+                    </label>
+                    <label>
+                        <input type="radio" name="q1" value="c"> c) Madrid
+                    </label>
+                </div>
+                
+                <div class="question">
+                    <p>2. Which planet is known as the Red Planet?</p>
+                    <label>
+                        <input type="radio" name="q2" value="a"> a) Venus
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="b"> b) Mars
+                    </label>
+                    <label>
+                        <input type="radio" name="q2" value="c"> c) Jupiter
+                    </label>
+                </div>
+
+                <div class="question">
+                    <p>3. What is the largest mammal on Earth?</p>
+                    <label>
+                        <input type="radio" name="q3" value="a"> a) Elephant
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="b"> b) Blue Whale
+                    </label>
+                    <label>
+                        <input type="radio" name="q3" value="c"> c) Giraffe
+                    </label>
+                </div>
+
+                <button type="button" onclick="submitQuiz()">Submit</button>
+            </form>
+
+            <div id="results-container" style="display: none;">
+                <h2>Results</h2>
+                <p id="results"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+CSS (style.css):
+
+css
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#quiz-container {
+    text-align: center;
+}
+
+.question {
+    margin-bottom: 20px;
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+#results-container {
+    text-align: center;
+}
+JavaScript (script.js):
+
+javascript
+function submitQuiz() {
+    const form = document.getElementById("quiz-form");
+    const resultsContainer = document.getElementById("results-container");
+    const results = document.getElementById("results");
+
+    // Check answers
+    const correctAnswers = ["a", "b", "b"];
+    let score = 0;
+
+    for (let i = 1; i <= 3; i++) {
+        const selectedAnswer = document.querySelector(`input[name="q${i}"]:checked`);
+
+        if (selectedAnswer) {
+            if (selectedAnswer.value === correctAnswers[i - 1]) {
+                score++;
+            }
+        }
+    }
+
+    // Display results
+    const percentage = (score / 3) * 100;
+    results.textContent = `You scored ${score} out of 3 (${percentage}%)`;
+
+    // Hide the form and show the results
+    form.style.display = "none";
+    resultsContainer.style.display = "block";
+}
